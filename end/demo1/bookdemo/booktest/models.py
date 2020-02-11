@@ -11,6 +11,9 @@ class Book(models.Model):
     pub_date = models.DateField(default="1983-06-01")
     price=models.FloatField(default=0)
 
+    def __str__(self):
+        return self.title
+
 class Hero(models.Model):
     name = models.CharField(max_length=20)
     gender = models.CharField(max_length=10, choices=(('male', '男'), ('female', '女')))
@@ -18,3 +21,6 @@ class Hero(models.Model):
 
     # book  是一对多中的外键  on_delete代表删除主表数据是如何做响应
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.name
