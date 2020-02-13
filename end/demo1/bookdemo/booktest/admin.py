@@ -13,7 +13,8 @@ class HeroInline(admin.StackedInline):
 
 class HeroAdmin(ModelAdmin):
 
-    list_display = ('name','gender','content')
+    list_display = ('name','gender','content','book')
+    search_fields = ('name','gender','content')
 
 admin.site.register(Hero,HeroAdmin)
 
@@ -22,6 +23,7 @@ class BookAdmin(ModelAdmin):
 
     list_display = ('title','price','pub_date')
 
+    search_fields=('title',)
     inlines = [HeroInline]
 
 admin.site.register(Book,BookAdmin)
