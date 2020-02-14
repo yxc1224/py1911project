@@ -18,7 +18,8 @@
         {% endfor %}
     </ul>
     <ul>
-        <a href="/booktest/index/">返回</a>
+        {# <a href="/">返回</a> #}
+        <a href="{% url 'booktest:index' %}">返回</a>
     </ul>
 </body>
 </html>

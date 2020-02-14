@@ -15,11 +15,9 @@
         <h2>书籍</h2>
         <ul>
             {% for book in books %}
-                <a href="/booktest/detail/{{book.id}}/">
-                    <li>
-                        {{book.id}}--{{book.title}}
-                    </li>
-                </a>
+                {# 这种是django的模板注释相较于ctrl+/  这种注释在页面f12的时候  不会显示 #}
+                {# <a href="/detail/{{book.id}}/"><li>{{book.id}}--{{book.title}}</li></a> #}
+                <a href="{% url 'booktest:detail' book.id %}"><li>{{book.id}}--{{book.title}}</li></a>
             {% endfor %}
         </ul>
     </div>

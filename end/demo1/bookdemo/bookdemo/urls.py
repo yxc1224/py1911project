@@ -30,7 +30,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('booktest/', include('booktest.urls'))
+    path('', include('booktest.urls',namespace='booktest'))
     # 将admin和index函数绑定
     # path('index/',index),
     # path('list/',list),
@@ -39,3 +39,15 @@ urlpatterns = [
 
 #  项目的所有路由地址配置文件
 # 总路由配置文件
+
+
+#  硬编码 在html 中有很多超级链接  其中href属性如果携程绝对路径 这种就叫做硬编码
+# 在开发的过程中  可能需要反复修改路由
+# 解除硬编码
+# 1需要给应用一个 app_name="应用名"  下载应用的urls.py中（分路由里面）
+# 2在项目路由中给应用分流时  在include中   提供命名空间
+# 3在应用中给每一个路由一个名字
+# 4在html中使用  href="{% url '命名空间:路由name' 实参列表 %}"
+# 以前定位路由  靠总路由正则表达式+应用路由正则表达式
+# 解除硬编码之后  使用  应用命名空间+应用路由名字
+
