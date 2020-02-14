@@ -58,6 +58,29 @@ def edithero(request,heroid):
         url=reverse("booktest:detail",args=(hero.book.id,))
         return redirect(to=url)
 
+def addbook(request):
+    if request.method=="GET":
+        return render(request,'addbook.html')
+    elif request.method=="POST":
+        book=Book()
+        book.title=request.POST.get("booktitle")
+        book.pub_date=request.POST.get("bookdate")
+        book.price=request.POST.get("booknum")
+        book.save()
+        url=reverse("booktest:index")
+        return redirect(to=url)
+
+def editbook(request,bookid):
+    book=Book.objects.get(id=bookid)
+    if request.method=="GET":
+        return render(request,'editbook.html',{"book":book})
+    elif request.method=="POST":
+        book.title = request.POST.get("booktitle")
+        book.pub_date = request.POST.get("bookdate")
+        book.price = request.POST.get("booknum")
+        book.save()
+        url = reverse("booktest:index")
+        return redirect(to=url)
 
 
 def about(request):
