@@ -17,9 +17,10 @@
             {% for book in books %}
                 {# 这种是django的模板注释相较于ctrl+/  这种注释在页面f12的时候  不会显示 #}
                 {# <a href="/detail/{{book.id}}/"><li>{{book.id}}--{{book.title}}</li></a> #}
-                <a href="{% url 'booktest:detail' book.id %}"><li>{{book.id}}--{{book.title}}</li></a>
+                <li><a href="{% url 'booktest:detail' book.id %}">{{book.id}}--{{book.title}}</a> &nbsp;&nbsp;&nbsp;<a href="{% url 'booktest:deletebook' book.id %}">删除</a></li>
             {% endfor %}
         </ul>
+
     </div>
 </body>
 </html>
