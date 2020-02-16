@@ -4,5 +4,7 @@ from . import views
 app_name="polls"
 
 urlpatterns=[
-    # url()
+    url(r'^$',views.polls,name='polls'),
+    url(r'^addpolls/(\d+)/$',views.addpolls,name='addpolls'),
+    url(r'ballot/(\d+)/$',views.ballot,name='ballot')
 ]

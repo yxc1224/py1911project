@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>投票</title>
+</head>
+<body>
+        <div>
+
+            <h1>投票信息：{{polls.polls_text}}</h1>
+            <form action="" method="post">
+                    {% for pollsmsg in polls.pollsmsg_set.all %}
+                    <input type="radio" name="pol" >{{pollsmsg.msg}}
+                    <br>
+                    {% endfor %}
+                    <input type="submit" value="投票">
+
+            </form>
+            <a href="{% url 'polls:polls' %}">返回</a>
+        </div>
+</body>
+</html>
