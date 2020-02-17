@@ -13,7 +13,7 @@
             <h1>投票信息：{{polls.polls_text}}</h1>
             <form action="" method="post">
                     {% for pollsmsg in polls.pollsmsg_set.all %}
-                    <input type="radio" name="pol" >{{pollsmsg.msg}}
+                    <input type="radio" name="pol" value="{{pollsmsg.id}}">{{pollsmsg.msg}}
                     <br>
                     {% endfor %}
                     <input type="submit" value="投票">

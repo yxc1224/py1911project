@@ -10,7 +10,7 @@ class Polls(models.Model):
 
 class  Pollsmsg(models.Model):
     msg=models.CharField(max_length=20,verbose_name="内容")
-    coutmsg=models.FloatField(max_length=10,verbose_name="数量",default=0)
+    coutmsg=models.PositiveIntegerField(max_length=10,verbose_name="数量",default=0)
 
     polls=models.ForeignKey(Polls,on_delete=models.CASCADE)
 

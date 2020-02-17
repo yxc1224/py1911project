@@ -10,15 +10,9 @@ from django.http import HttpResponse
 # Create your views here.
 
 def polls(request):
-    # return HttpResponse("这里是首页")
-    # 1.获取模板
-    template = loader.get_template('polls.html')
-    # 2.渲染模板数据
+
     pollss = Polls.objects.all()
-    context = {'pollss': pollss}
-    result = template.render(context)
-    # 3.将渲染结果返回
-    return HttpResponse(result)
+    return render(request, 'polls.html', {"pollss": pollss})
 
 
 
@@ -28,7 +22,9 @@ def addpolls(request, pollsid):
         return render(request, 'addpolls.html', {"polls": polls})
     elif request.method == "POST":
         pol1=request.POST.get("pol")
-
+        pollsmsg=Pollsmsg.objects.get(id=pol1)
+        pollsmsg.coutmsg+=1
+        pollsmsg.save()
         url = reverse("polls:ballot",args=(polls.id,))
         return redirect(to=url)
 
