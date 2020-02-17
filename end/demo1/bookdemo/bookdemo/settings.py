@@ -23,9 +23,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'yu3t&tkzolyp#wr+at21zdrfq!hx-#r&8q)#*=4obl9^t0f-tl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+
+DEBUG = True
+# DEBUG = False
+
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -51,6 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+#  根配置  指明总路由的位置
 ROOT_URLCONF = 'bookdemo.urls'
 
 
@@ -122,4 +126,12 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+# 配置静态文件
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
+
+
+# 配置媒体文件
+MEDIA_URL ='/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIAFILES_DIRS = [os.path.join(BASE_DIR,'media')]
+

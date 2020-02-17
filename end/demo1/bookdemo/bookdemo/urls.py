@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 
+# 使用媒体资源
+
+
 # 路由  每个网址均需要绑定视图函数  视图函数给与页面返回
 
 # from django.http import HttpResponse
@@ -36,6 +39,8 @@ urlpatterns = [
     # path('list/',list),
     # path('jsondata/',jsondata)
     path('', include('polls.urls',namespace='polls'))
+
+
 ]
 
 #  项目的所有路由地址配置文件
