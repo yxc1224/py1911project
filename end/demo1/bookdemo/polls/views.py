@@ -36,7 +36,7 @@ def addpolls(request, pollsid):
             print(request.user.pollss.all(),"11",polls_text)
 
             if polls_text in request.user.pollss.all():
-
+                print("1111")
                 url = reverse("polls:ballot", args=(polls_text.id,))
                 return redirect(to=url)
             else:
