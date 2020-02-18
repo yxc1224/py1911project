@@ -1,20 +1,15 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-        <div>
+{% extends 'base.html' %}
+
+
+        {% block body %}
             <h1>投票信息：{{polls.polls_text}}</h1>
-            {% for pollsmsg in polls.pollsmsg_set.all %}
-                {{pollsmsg.msg}}: {{pollsmsg.coutmsg}}
-                <br>
-            {% endfor %}
+                {% for pollsmsg in polls.pollsmsg_set.all %}
+                    {{pollsmsg.msg}}: {{pollsmsg.coutmsg}}
+                    <br>
+                {% endfor %}
             <a href="/">返回主页</a>
-        </div>
-</body>
-</html>
+        {% endblock %}
+
+        {% block footer %}
+            底部
+        {% endblock %}

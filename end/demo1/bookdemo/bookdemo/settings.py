@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -129,9 +129,5 @@ STATIC_URL = '/static/'
 # 配置静态文件
 STATICFILES_DIRS = [os.path.join(BASE_DIR,'static')]
 
-
-# 配置媒体文件
-MEDIA_URL ='/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR,'media')
-MEDIAFILES_DIRS = [os.path.join(BASE_DIR,'media')]
-
+# 使用自定义的用户类作为django的认证类 需要使用配置
+AUTH_USER_MODEL="polls.User"

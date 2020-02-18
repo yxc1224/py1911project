@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+        <div>
+            {% block header %}
+                <div>
+                    {% if request.user and request.user.username != '' %}
+                    用户名:{{request.user.username}} <a href="{% url 'polls:logout' %}">退出</a>
+                    {% else %}
+                        <a href="{% url 'polls:login' %}">登录</a> <a href="{% url 'polls:regist' %}"> 注册</a>
+                    {% endif %}
+                </div>
+            {% endblock %}
+
+            {% block body %}
+                身体
+            {% endblock %}
+
+            {% block footer %}
+                底部
+            {% endblock %}
+        </div>
+</body>
+</html>

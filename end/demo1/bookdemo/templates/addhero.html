@@ -10,7 +10,7 @@
 <body>
         <div>
             <form action="" method="post">
-
+                {% csrf_token %}
                 英雄名字：<input type="text" name="heroname" placeholder="输入角色名">
                 <br>
                 英雄技能：<input type="text" name="herocontent" placeholder="输入技能">

@@ -12,6 +12,7 @@
             <h2>编辑书籍</h2>
 
             <form action="" method="post">
+                {% csrf_token %}
                 书籍名称：<input type="text" name="booktitle" value="{{book.title}}">
                 <br>
                 出版日期：<input type="date" name="bookdate" value="{{book.pub_date}}">

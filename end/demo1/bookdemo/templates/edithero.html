@@ -9,6 +9,7 @@
 </head>
 <body>
 <form action="" method="post">
+    {% csrf_token %}
     英雄的名字：<input type="text" name="heroname" value="{{hero.name}}">
     <br>
     英雄的技能：<input type="text" name="herocontent" value="{{hero.content}}">
