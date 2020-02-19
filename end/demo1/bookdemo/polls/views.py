@@ -89,29 +89,29 @@ class ResultView(View):
 def login(request):
     if request.method == "GET":
         # 2 使用表单类生成表单
-        lf = LoginForm()
-        return render(request, 'login.html', {"lf": lf})
+        # lf = LoginForm()
+        # return render(request, 'login.html', {"lf": lf})
         # 1 需要在html中自己编写表单
-        # return render(request, 'login.html')
+        return render(request, 'login.html')
     elif request.method == "POST":
-        lf = LoginForm(request.POST)
-        if lf.is_valid():
+        # lf = LoginForm(request.POST)
+        # if lf.is_valid():
 
-            username = request.POST.get("username")
-            password = request.POST.get("password")
-            #  可以使用Django自带的用户认证   认证成功返回用户  失败返回none
-            user = authenticate(username=username, password=password)
-            if user:
-                # 调用Django的登录方法  生成cookie
-                lin(request, user)
-                url = reverse("polls:polls")
-                return redirect(to=url)
-            else:
-                # url=reverse("polls:login")
-                # return redirect(to=url)
-                return render(request, 'login.html', {'errors': "用户名或密码错误"})
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+        #  可以使用Django自带的用户认证   认证成功返回用户  失败返回none
+        user = authenticate(username=username, password=password)
+        if user:
+            # 调用Django的登录方法  生成cookie
+            lin(request, user)
+            url = reverse("polls:polls")
+            return redirect(to=url)
         else:
-            return HttpResponse("未知错误")
+            # url=reverse("polls:login")
+            # return redirect(to=url)
+            return render(request, 'login.html', {'errors': "用户名或密码错误"})
+        # else:
+        #     return HttpResponse("未知错误")
 
 
 def regist(request):
