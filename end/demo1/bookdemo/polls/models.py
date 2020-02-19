@@ -14,6 +14,7 @@ class User(AbstractUser):
 
 
 class Polls(models.Model):
+    # 问题类
     polls_text = models.CharField(max_length=20)
 
     def __str__(self):
@@ -21,6 +22,7 @@ class Polls(models.Model):
 
 
 class Pollsmsg(models.Model):
+    # 选项类
     msg = models.CharField(max_length=20, verbose_name="内容")
     coutmsg = models.PositiveIntegerField(verbose_name="数量", default=0)
 
