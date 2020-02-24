@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 
 from django.http import HttpResponse
 
@@ -20,23 +20,61 @@ from django.core.paginator import Paginator, Page
 
 
 from .models import *
+from .forms import *
 
 
 # Create your views here.
 
 def index(request):
     ads = Ads.objects.all()
-    # locals() 可以返回作用域局部变量
-    articles = Article.objects.all()
-    paginator=Paginator(articles,2)
-    num=request.GET.get("pagenum",1)
-    page=paginator.get_page(num)
-    print(locals())
-    return render(request, 'index.html', {"ads":ads,"page":page})
+    typepage = request.GET.get("type")
+    year = None
+    month = None
+    category_id = None
+    tag_id = None
+    if typepage == "date":
+        year = request.GET.get("year")
+        month = request.GET.get("month")
+        articles = Article.objects.filter(create_time__year=year, create_time__month=month)
+    elif typepage == "category":
+        category_id = request.GET.get("category_id")
+        category = Category.objects.get(id=category_id, )
+        articles = category.article_set.all()
+    elif typepage == "tag":
+        tag_id = request.GET.get("tag_id")
+        tag = Tag.objects.get(id=tag_id)
+        articles = tag.article_set.all()
+    else:
+        # locals() 可以返回作用域局部变量
+        articles = Article.objects.all()
+    paginator = Paginator(articles, 2)
+    num = request.GET.get("pagenum", 1)
+    page = paginator.get_page(num)
+
+    return render(request, 'index.html', {"ads": ads, "page": page, "typepage": typepage, "year": year, "month": month,
+                                          "category_id": category_id, "tag_id": tag_id})
+    # return render(request,locals())
 
 
 def detail(request, articleid):
-    return render(request, 'single.html')
+    if request.method == "GET":
+
+        article = Article.objects.get(id=articleid)
+        cf = CommentForm()
+        return render(request, 'single.html', locals())
+    elif request.method == "POST":
+        cf = CommentForm(request.POST)
+        if cf.is_valid():
+            comment=cf.save(commit=False)
+            comment.article = Article.objects.get(id=articleid)
+            comment.save()
+            url = reverse("blogapp:detail", args=(articleid,))
+            return redirect(to=url)
+        else:
+            article = Article.objects.get(id=articleid)
+            cf = CommentForm()
+            errors = "信息有误"
+            return render(request, 'single.html', locals())
 
 
 def contact(request):
