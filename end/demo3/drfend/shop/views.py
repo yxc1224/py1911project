@@ -7,8 +7,12 @@ from .serializers import *
 class CategoryViewSets(viewsets.ModelViewSet):
 
     queryset = Category.objects.all()
-    serializer_class=CategorySerizlizer
+    serializer_class=CategorySerializer
 
 class GoodViewSets(viewsets.ModelViewSet):
     queryset = Good.objects.all()
-    serializer_class = GoodSerizlizer
+    serializer_class = GoodSerializer
+
+class GoodImgsViewSets(viewsets.ModelViewSet):
+    queryset = GoodImgs.objects.all()
+    serializer_class = GoodImgsSerializer
