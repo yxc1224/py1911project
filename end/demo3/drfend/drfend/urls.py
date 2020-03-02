@@ -34,19 +34,25 @@ router.register('goodimgs', GoodImgsViewSets)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-
     url('media/(?P<path>.*)', serve, {'document_root': MEDIA_ROOT}),
 
     # 基于函数的路由
     # url(r'^categorylist/$', categoryList, name='categorylist'),
-    # url(r'^categorydetail/$', categoryDetail, name='categorydetail'),
+    # url(r'^categorydetail/(\d+)/$', categoryDetail, name='categorydetail'),
 
     # 基于类的路由
-    url(r'^categorylist/$', CategoryListView.as_view(), name='categorylist'),
-    url(r'^categorydetail/$', CategoryDetailView.as_view(), name='categorydetail'),
+    # url(r'^categorylist/$', CategoryListView.as_view(), name='categorylist'),
+    # url(r'^categorydetail/(\d+)/$', CategoryDetailView.as_view(), name='categorydetail'),
+
+    # url(r'^categorylist/$', CategoryListView.as_view(), name='categorylist'),
+    # url(r'^categorydetail/(?P<pk>\d+)/$', CategoryDetailView.as_view(), name='categorydetail'),
+
+    # url(r'^categorys/$', CategoryViewSets2.as_view({'get': 'list','post':'create'})),
+    # url(r'^categorys/(?P<pk>\d+)/$', CategoryViewSets2.as_view({'get': 'retrieve','put':'update','patch':'update','delete':'destroy'})),
 
 
-    # path('api/v1/',include(router.urls)),
+
+    path('api/v1/',include(router.urls)),
     path('api/v1/docs/', include_docs_urls(title="RestFulAPI", description='RestFulAPIv1')),
     path('', include('rest_framework.urls')),
 ]

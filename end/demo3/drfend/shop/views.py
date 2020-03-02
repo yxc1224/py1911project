@@ -13,32 +13,99 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 
 from django.views import View
+from rest_framework.views import APIView
+from rest_framework import generics
+from rest_framework import mixins
 
 
-class CategoryListView(View):
+class CategoryListView(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class CategoryListView2(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
+    # def get_queryset(self):
+    #     return Category.objects.all()
+
+    # def get_serializer_class(self):
+    #     return CategorySerializer
+
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get(self, request):
+        return self.list(request)
+
+    def post(self, request):
+        return self.create(request)
+
+
+class CategoryListView1(APIView):
     """
-    继承Django自带的View类需要重写对应的http方法
+    1.继承Django自带的View类需要重写对应的http方法
+    2.继承ORF自带的APIView类即可完成请求响应的封装
     """
 
     def get(self, request):
-        return HttpResponse("返回列表成功")
+        seria = CategorySerializer(instance=Category.objects.all(), many=True)
+        return Response(seria.data, status=status.HTTP_200_OK)
 
     def post(self, request):
-        return HttpResponse("创建成功")
+        seria = CategorySerializer(data=request.data, many=True)
+        if seria.is_valid():
+            seria.save()
+            return Response(seria.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(seria.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CategoryDetailView(View):
+class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class CategoryDetailView2(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                          mixins.DestroyModelMixin):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk)
+
+    def patch(self, request, pk):
+        return self.update(request, pk)
+
+    def delete(self, request, pk):
+        return self.delete(request, pk)
+
+
+class CategoryDetailView1(APIView):
     def get(self, request, cid):
-        return HttpResponse("返回单个对象")
+        seria = CategorySerializer(instance=get_object_or_404(Category, pk=cid))
+        return Response(seria.data, status=status.HTTP_200_OK)
 
     def put(self, request, cid):
-        return HttpResponse("修改成功put")
+        seria = CategorySerializer(instance=get_object_or_404(Category, pk=cid), data=request.data)
+        if seria.is_valid():
+            seria.save()
+            return Response(seria.data, status.HTTP_200_OK)
+        else:
+            return Response(seria.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def patch(self, request, cid):
-        return HttpResponse("修改成功patch")
+        seria = CategorySerializer(instance=get_object_or_404(Category, pk=cid), data=request.data)
+        if seria.is_valid():
+            seria.save()
+            return Response(seria.data, status.HTTP_200_OK)
+        else:
+            return Response(seria.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, cid):
-        return HttpResponse("删除成功")
+        get_object_or_404(Category, pk=cid).detele()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['GET', 'POST'])
@@ -82,6 +149,12 @@ def categoryDetail(request, cid):
         return Response(status.HTTP_204_NO_CONTENT)
     else:
         return HttpResponse('当前路由不允许' + request.method + '操作')
+
+
+class CategoryViewSets2(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
 
 
 class CategoryViewSets(viewsets.ModelViewSet):
