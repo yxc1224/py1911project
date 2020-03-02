@@ -26,7 +26,6 @@ from rest_framework.documentation import include_docs_urls
 
 # 引入DRF自带的路由类
 from rest_framework import routers
-
 router=routers.DefaultRouter()
 
 router.register('categorys',CategoryViewSets)
@@ -36,10 +35,12 @@ router.register('goodimgs',GoodImgsViewSets)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('',include('rest_framework.urls'))
 
     url( 'media/(?P<path>.*)',serve,{'document_root':MEDIA_ROOT} ),
-    path('api/v1',include(router.urls)),
-    path('api/v1/docs/',include_docs_urls(title="RestFulAPI",description='RestFulAPIv1')),
 
+    url(r'^categorylist/$',categoryList,name='categorylist'),
+    url(r'^categorydetail/$',categoryDetail,name='categorydetail'),
+    # path('api/v1/',include(router.urls)),
+    path('api/v1/docs/',include_docs_urls(title="RestFulAPI",description='RestFulAPIv1')),
+    path('',include('rest_framework.urls')),
 ]
