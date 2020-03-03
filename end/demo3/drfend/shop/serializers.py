@@ -90,7 +90,7 @@ class GoodImgsSerializer(serializers.Serializer):
 class GoodSerializer(serializers.Serializer):
     name = serializers.CharField()
     category = CategorySerializer()
-    imgs = GoodImgsSerializer(label="图片",many=True,read_only=True)
+    imgs = GoodImgsSerializer(label="图片", many=True, read_only=True)
 
     def validate_category(self, category):
         """
@@ -120,3 +120,25 @@ class GoodSerializer(serializers.Serializer):
         instance.category = validated_data.get("category", instance.category)
         instance.save()
         return instance
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
+        fields = '__all__'
+
+
+class UserRegistSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=10, min_length=3)
+    password = serializers.CharField(max_length=10, min_length=3,write_only=True)
+    password2 = serializers.CharField(max_length=10, min_length=3,write_only=True)
+
+    def validate_password2(self, data):
+        if data != self.initial_data["password"]:
+            raise serializers.ValidationError("密码不一致")
+        else:
+            return data
+
+    def create(self, validated_data):
+        return User.objects.create_user(username=validated_data.get('username'), email=validated_data.get('email'),
+                                        password=validated_data.get('password'))

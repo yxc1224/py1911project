@@ -6,7 +6,7 @@ from django.http import HttpResponse, JsonResponse
 # Create your views here.
 
 # 通过api_view装饰器  可以将基于函数的视图转换成 APIView基于类视图
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -16,11 +16,6 @@ from django.views import View
 from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import mixins
-
-
-class CategoryListView(generics.ListCreateAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
 
 
 class CategoryListView2(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
@@ -40,6 +35,24 @@ class CategoryListView2(generics.GenericAPIView, mixins.ListModelMixin, mixins.C
         return self.create(request)
 
 
+class CategoryDetailView2(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                          mixins.DestroyModelMixin):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+    def get(self, request, pk):
+        return self.retrieve(request, pk)
+
+    def put(self, request, pk):
+        return self.update(request, pk)
+
+    def patch(self, request, pk):
+        return self.update(request, pk)
+
+    def delete(self, request, pk):
+        return self.delete(request, pk)
+
+
 class CategoryListView1(APIView):
     """
     1.继承Django自带的View类需要重写对应的http方法
@@ -57,29 +70,6 @@ class CategoryListView1(APIView):
             return Response(seria.data, status=status.HTTP_201_CREATED)
         else:
             return Response(seria.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-
-
-class CategoryDetailView2(generics.GenericAPIView, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
-                          mixins.DestroyModelMixin):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-
-    def get(self, request, pk):
-        return self.retrieve(request, pk)
-
-    def put(self, request, pk):
-        return self.update(request, pk)
-
-    def patch(self, request, pk):
-        return self.update(request, pk)
-
-    def delete(self, request, pk):
-        return self.delete(request, pk)
 
 
 class CategoryDetailView1(APIView):
@@ -106,6 +96,16 @@ class CategoryDetailView1(APIView):
     def delete(self, request, cid):
         get_object_or_404(Category, pk=cid).detele()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CategoryListView(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+
+class CategoryDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
 
 
 @api_view(['GET', 'POST'])
@@ -152,9 +152,26 @@ def categoryDetail(request, cid):
 
 
 class CategoryViewSets2(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
+    """
+    如果返回的内容就是模型列表  用queryset方便
 
+    如果需要处理  可以使用get_queryset  结合 basename
+    """
+    queryset = Category.objects.all()
+
+    # def get_queryset(self):
+    #     return Category.objects.all()[:3]
+
+    # serializer_class = CategorySerializer
+    def get_serializer_class(self):
+        return CategorySerializer
+
+    @action(methods=["GET"], detail=False)
+    def getlatestcategory(self, request, num):
+        num = int(request.query_params.get('num'))
+        seria = CategorySerializer(instance=Category.objects.all()[:num], many=True)
+
+        return Response(data=seria.data, status=status.HTTP_200_OK)
 
 
 class CategoryViewSets(viewsets.ModelViewSet):
@@ -170,3 +187,16 @@ class GoodViewSets(viewsets.ModelViewSet):
 class GoodImgsViewSets(viewsets.ModelViewSet):
     queryset = GoodImgs.objects.all()
     serializer_class = GoodImgsSerializer
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+    @action(methods=['POST'], detail=False)
+    def regist(self, request):
+        seria = UserRegistSerializer(data=request.data)
+        seria.is_valid(raise_exception=True)
+        seria.save()
+
+        return Response(seria.data, status=status.HTTP_201_CREATED)

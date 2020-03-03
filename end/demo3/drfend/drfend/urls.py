@@ -28,9 +28,11 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 
-router.register('categorys', CategoryViewSets)
+# router.register('categorys', CategoryViewSets2,basename='categorys')
+router.register('categorys', CategoryViewSets2)
 router.register('goods', GoodViewSets)
 router.register('goodimgs', GoodImgsViewSets)
+router.register('users',UserViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -44,8 +46,8 @@ urlpatterns = [
     # url(r'^categorylist/$', CategoryListView.as_view(), name='categorylist'),
     # url(r'^categorydetail/(\d+)/$', CategoryDetailView.as_view(), name='categorydetail'),
 
-    # url(r'^categorylist/$', CategoryListView.as_view(), name='categorylist'),
-    # url(r'^categorydetail/(?P<pk>\d+)/$', CategoryDetailView.as_view(), name='categorydetail'),
+    # url(r'^categorylist/$', CategoryListView2.as_view(), name='categorylist'),
+    # url(r'^categorydetail/(?P<pk>\d+)/$', CategoryDetailView2.as_view(), name='categorydetail'),
 
     # url(r'^categorys/$', CategoryViewSets2.as_view({'get': 'list','post':'create'})),
     # url(r'^categorys/(?P<pk>\d+)/$', CategoryViewSets2.as_view({'get': 'retrieve','put':'update','patch':'update','delete':'destroy'})),
