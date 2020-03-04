@@ -17,6 +17,7 @@ from rest_framework.views import APIView
 from rest_framework import generics
 from rest_framework import mixins
 
+from rest_framework import permissions
 
 class CategoryListView2(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     # def get_queryset(self):
@@ -178,6 +179,9 @@ class CategoryViewSets(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+    # 用户未登录不显示分类列表  优先级别高于全局
+    permission_classes = [permissions.IsAdminUser()]
+
 
 class GoodViewSets(viewsets.ModelViewSet):
     queryset = Good.objects.all()
@@ -189,7 +193,8 @@ class GoodImgsViewSets(viewsets.ModelViewSet):
     serializer_class = GoodImgsSerializer
 
 
-class UserViewSet(viewsets.ModelViewSet):
+class UserViewSet1(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                   mixins.DestroyModelMixin):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -198,5 +203,16 @@ class UserViewSet(viewsets.ModelViewSet):
         seria = UserRegistSerializer(data=request.data)
         seria.is_valid(raise_exception=True)
         seria.save()
-
         return Response(seria.data, status=status.HTTP_201_CREATED)
+
+
+class UserViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
+                  mixins.DestroyModelMixin):
+    queryset = User.objects.all()
+    # serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        print('action代表Http方法',self.action)
+        if self.action=='creste':
+            return UserRegistSerializer
+        return UserSerializer

@@ -124,14 +124,21 @@ class GoodSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Category
+        model = User
         fields = '__all__'
+
+    def validate(self, attrs):
+        # 引用Django中的加密方法
+        from django.contrib.auth import hashers
+        if attrs.get('password'):
+            attrs['password'] = hashers.make_password(attrs['password'])
+        return attrs
 
 
 class UserRegistSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=10, min_length=3)
-    password = serializers.CharField(max_length=10, min_length=3,write_only=True)
-    password2 = serializers.CharField(max_length=10, min_length=3,write_only=True)
+    password = serializers.CharField(max_length=10, min_length=3, write_only=True)
+    password2 = serializers.CharField(max_length=10, min_length=3, write_only=True)
 
     def validate_password2(self, data):
         if data != self.initial_data["password"]:
