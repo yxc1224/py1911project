@@ -57,7 +57,7 @@ urlpatterns = [
     # url(r'^categorys/(?P<pk>\d+)/$', CategoryViewSets2.as_view({'get': 'retrieve','put':'update','patch':'update','delete':'destroy'})),
 
     # 先通过用户名密码得到Token VUE得到refresh以及access保存  通过access请求服务器  通过refresh获取新的access
-    url(r'^login/$', token_obtain_pair, name='login'),
+    url(r'^login2/$', token_obtain_pair, name='login2'),
     url('^refresh/$', token_refresh, name='refresh'),
 
     path('api/v1/', include(router.urls)),
