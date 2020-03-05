@@ -127,8 +127,26 @@ REST_FRAMEWORK = {
     # 默认权限配置  每一个http方法都可以有对应的权限配置
     # 全局配置  优先级高于视图类中的配置
     'DEFAULT_PERMISSION_CLASSES': [
-# IsAuthenticated
+
+        # IsAuthenticated
         'rest_framework.permissions.AllowAny',
+    ],
+
+    # 全局认证  优先级高于视图类中的配置
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+
+        # 默认首先使用Session认证
+        'rest_framework.authentication.SessionAuthentication',
+        # cookie 和 session
+        # cookie是存储在浏览器上的非敏感数据
+        # session是存储在服务器上的敏感数据  但是session离不开cookie  因为session中的sessionid存储在cookie中
+        # 发起请求时  需要在Cookie中携带sessionid    csrftoken    在header中携带X-CSRFToken  值可以在浏览器登录用户的Cookie中复制
+
+        # 默认首先使用Basic认证
+        # 将请求中携带的类似  Basic MTExOjEyMzQ1Ng==  进行解码处理  得到对应的用户
+        'rest_framework.authentication.BasicAuthentication'
     ],
 
 }

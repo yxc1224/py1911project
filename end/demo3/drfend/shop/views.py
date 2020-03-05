@@ -19,6 +19,9 @@ from rest_framework import mixins
 
 from rest_framework import permissions
 
+from . import permissions as mypermissions
+
+
 class CategoryListView2(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     # def get_queryset(self):
     #     return Category.objects.all()
@@ -180,7 +183,16 @@ class CategoryViewSets(viewsets.ModelViewSet):
     serializer_class = CategorySerializer
 
     # 用户未登录不显示分类列表  优先级别高于全局
-    permission_classes = [permissions.IsAdminUser()]
+    # permission_classes = [permissions.IsAdminUser]
+
+    # 授权的前提是认证  登录过（认证后）之后可以进行权限判断
+
+    # 超级管理员可以创建分类  普通用户可以查看分类
+    def get_permissions(self):
+        if self.action == "create" or self.action == "update" or self.action == "partial_update" or self.action == "destroy":
+            return [permissions.IsAdminUser()]
+        else:
+            return [permissions.IsAuthenticated()]
 
 
 class GoodViewSets(viewsets.ModelViewSet):
@@ -209,10 +221,42 @@ class UserViewSet1(viewsets.GenericViewSet, mixins.RetrieveModelMixin, mixins.Up
 class UserViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.UpdateModelMixin,
                   mixins.DestroyModelMixin):
     queryset = User.objects.all()
+
     # serializer_class = UserSerializer
 
     def get_serializer_class(self):
-        print('action代表Http方法',self.action)
-        if self.action=='creste':
+        print('action代表Http方法', self.action)
+        if self.action == 'create':
             return UserRegistSerializer
         return UserSerializer
+
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+
+    serializer_class = OrderSerializer
+
+    # permission_classes = [permissions.OrderPermission]
+
+    def get_permissions(self):
+        """
+        超级管理员可以展示所有订单
+        普通用户可以创建修改订单 不可以操作其他用户的订单
+        :return:
+        """
+        print("http方法：", self.action)
+        if self.action == 'create':
+            return [permissions.IsAuthenticated()]
+        elif self.action == 'update' or self.action == 'partial_update' or self.action == 'retrieve' or self.action == 'destroy':
+            return [mypermissions.OrderPermission()]
+        else:
+            return [permissions.IsAdminUser()]
+
+#
+# http方法                          混合类关键字                   action关键字
+# GET列表                           List                          get
+# POST创建对象                       Create                       create
+# GET 单个对象                       Retrieve                     retrieve
+# PUT 修改对象提供全属性              Update                       update
+# PATCH 修改对象提供部分属性          Update                       partial_update
+# DELETE 删除对象                    Destroy                      destroy

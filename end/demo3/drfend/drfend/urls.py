@@ -23,16 +23,20 @@ from django.views.static import serve
 #  引入API文档路由
 from rest_framework.documentation import include_docs_urls
 
+# 引入rest_framework_simple路由
+from rest_framework_simplejwt.views import token_obtain_pair, token_refresh
+
 # 引入DRF自带的路由类
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 
 # router.register('categorys', CategoryViewSets2,basename='categorys')
-router.register('categorys', CategoryViewSets2)
+router.register('categorys', CategoryViewSets)
 router.register('goods', GoodViewSets)
 router.register('goodimgs', GoodImgsViewSets)
-router.register('users',UserViewSet)
+router.register('users', UserViewSet)
+router.register('orders', OrderViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -52,9 +56,11 @@ urlpatterns = [
     # url(r'^categorys/$', CategoryViewSets2.as_view({'get': 'list','post':'create'})),
     # url(r'^categorys/(?P<pk>\d+)/$', CategoryViewSets2.as_view({'get': 'retrieve','put':'update','patch':'update','delete':'destroy'})),
 
+    # 先通过用户名密码得到Token VUE得到refresh以及access保存  通过access请求服务器  通过refresh获取新的access
+    url(r'^login/$', token_obtain_pair, name='login'),
+    url('^refresh/$', token_refresh, name='refresh'),
 
-
-    path('api/v1/',include(router.urls)),
+    path('api/v1/', include(router.urls)),
     path('api/v1/docs/', include_docs_urls(title="RestFulAPI", description='RestFulAPIv1')),
     path('', include('rest_framework.urls')),
 ]
