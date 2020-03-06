@@ -27,6 +27,10 @@ from .throttling import MyAnon, MyUser
 
 from .pagination import MyPagination
 
+# 引入Django过滤类
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import filters
+
 class CategoryListView2(generics.GenericAPIView, mixins.ListModelMixin, mixins.CreateModelMixin):
     # def get_queryset(self):
     #     return Category.objects.all()
@@ -201,8 +205,18 @@ class CategoryViewSets(viewsets.ModelViewSet):
             return []
 
     throttle_classes = [MyAnon, MyUser]
+
     pagination_class = MyPagination
 
+
+
+    filter_backends = [DjangoFilterBackend,filters.SearchFilter]
+    # 过滤
+    filterset_fields = ["name"]
+    # 搜索
+    search_fields = ["name"]
+    # 排序
+    ordering_fields = ["id"]
 
 class GoodViewSets(viewsets.ModelViewSet):
     queryset = Good.objects.all()
